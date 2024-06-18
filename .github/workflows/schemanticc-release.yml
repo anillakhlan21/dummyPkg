@@ -12,8 +12,8 @@ jobs:
     
       -name: Set up debug logging
        run: |
-        echo "ACTIONS_RUNNER_DEBUG=true" ?? $GITHUB_ENV
-        echo "ACTIONS_STEP_DEBUG=true" ?? $GITHUB_ENV
+        echo "ACTIONS_RUNNER_DEBUG=true" >> $GITHUB_ENV
+        echo "ACTIONS_STEP_DEBUG=true" >> $GITHUB_ENV
 
       -name: Checkout code
        uses: actions/checkout@v2
