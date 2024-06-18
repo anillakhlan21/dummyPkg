@@ -10,61 +10,61 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     
-      -name: Set up debug logging
-       run: |
+      - name: Set up debug logging
+        run: |
          echo "ACTIONS_RUNNER_DEBUG=true" >> $GITHUB_ENV
          echo "ACTIONS_STEP_DEBUG=true" >> $GITHUB_ENV
 
-      -name: Checkout code
-       uses: actions/checkout@v2
+      - name: Checkout code
+        uses: actions/checkout@v2
 
-      -name: Fetch and pull latest changes
-       run: |
+      - name: Fetch and pull latest changes
+        run: |
          git fetch origin 
          git pull origin ${{ github.ref }}
 
-      -name: Setup Node.js
-       uses: actions/setup-node@v2
-       with:
-        node-version: '20'
-        registry-url: ''
+      - name: Setup Node.js
+        uses: actions/setup-node@v2
+        with:
+         node-version: '20'
+         registry-url: ''
 
-      -name: Install dependencies
-       run: npm install
+      - name: Install dependencies
+        run: npm install
 
-      -name: Configure npm for Github packages
-       run: |
-        echo "" >> ~/.npmrc
-        echo "" > ~/.npmrc
+      - name: Configure npm for Github packages
+        run: |
+         echo "" >> ~/.npmrc
+         echo "" > ~/.npmrc
 
-      -name: Run Semantic release
-       id: semantic_release
-       continue-on-error: true
-       run: |
-        npx semantic-release
-       env: 
+      - name: Run Semantic release
+        id: semantic_release
+        continue-on-error: true
+        run: |
+         npx semantic-release
+        env: 
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           NODE_AUTH_TOKEN: ${{secrets.NPM_TOKEN}}
           CI: true
 
-      -name: Notify Slack on Error
-       if: steps.semantic_release.outcome == 'failure'
-       run: |
-        curl -X POST -H 'Content-type: aplication/json' --data "{\"text\": "A failure occured during release: <${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}|View Action>\"}" ${{ secrets.SLACK_WEBHOOK_URL }}
-       env:
-        SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+      - name: Notify Slack on Error
+        if: steps.semantic_release.outcome == 'failure'
+        run: |
+          curl -X POST -H 'Content-type: application/json' --data "{\"text\": \"A failure occured during release: <${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}|View Action>\"}" ${{ secrets.SLACK_WEBHOOK_URL }}
+        env:
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
       
-      -name: Notify Slack on Success
-       if: steps.semantic_release.outcome == 'success'
-       run: |
-        PACKAGE_NAME=$(jq -r .name < package.json)
-        VERSION=$(jq -r .version < package.json)
-        echo $steps.semantic_release
-        if grep -q 'npm notice filename:' release_output.log; then
+      - name: Notify Slack on Success
+        if: steps.semantic_release.outcome == 'success'
+        run: |
+         PACKAGE_NAME=$(jq -r .name < package.json)
+         VERSION=$(jq -r .version < package.json)
+         echo $steps.semantic_release
+         if grep -q 'npm notice filename:' release_output.log; then
           curl -X POST -H 'Content-type: aplication/json' --data "{\"text\": "A new version of ${PACKAGE_NAME} (${VERSION}) has been released!\"}" ${{ secrets.SLACK_WEBHOOK_URL }}
-        else
-         echo "No new version published."
-        fi
+         else
+          echo "No new version published."
+         fi
 
-       env:
-        SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+        env:
+         SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
