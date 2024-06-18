@@ -12,16 +12,16 @@ jobs:
     
       -name: Set up debug logging
        run: |
-        echo "ACTIONS_RUNNER_DEBUG=true" >> $GITHUB_ENV
-        echo "ACTIONS_STEP_DEBUG=true" >> $GITHUB_ENV
+         echo "ACTIONS_RUNNER_DEBUG=true" >> $GITHUB_ENV
+         echo "ACTIONS_STEP_DEBUG=true" >> $GITHUB_ENV
 
       -name: Checkout code
        uses: actions/checkout@v2
 
       -name: Fetch and pull latest changes
        run: |
-        git fetch origin 
-        git pull origin ${{ github.ref }}
+         git fetch origin 
+         git pull origin ${{ github.ref }}
 
       -name: Setup Node.js
        uses: actions/setup-node@v2
