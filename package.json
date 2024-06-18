@@ -1,0 +1,19 @@
+{
+  "name": "dummypkg",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/anillakhlan21/dummyPkg.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/anillakhlan21/dummyPkg/issues"
+  },
+  "homepage": "https://github.com/anillakhlan21/dummyPkg#readme"
+}
